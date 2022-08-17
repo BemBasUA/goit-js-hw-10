@@ -21,7 +21,9 @@ function onSearchInput() {
     refs.countryList.innerHTML = '';
     return;
   }
-  fetchCountries(refs.searchBox.value.trim()).then(createCountriesMurkup);
+  fetchCountries(refs.searchBox.value.trim())
+    .then(createCountriesMurkup)
+    .catch(error => console.log(error));
 }
 
 function createCountriesMurkup(countries) {
