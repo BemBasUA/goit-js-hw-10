@@ -11,6 +11,8 @@ const refs = {
   countryInfo: document.querySelector(`.country-info`),
 };
 
+let markup = '';
+
 refs.searchBox.addEventListener(
   `input`,
   debounce(onSearchInput, DEBOUNCE_DELAY)
@@ -22,31 +24,15 @@ function onSearchInput() {
     return;
   }
   fetchCountries(refs.searchBox.value.trim())
-    .then(createCountriesMurkup)
+    .then(createMurkup)
     .catch(error => console.log(error));
 }
 
-function createCountriesMurkup(countries) {
-  let markup = '';
-  if ((countries.length > 1) & (countries.length <= 10)) {
-    markup = countries
-      .map(country => {
-        return `<li>
-    <img src="${country.flags.svg}" width = 30 alt="" />
-    <span>${country.name.official}</span>
-  </li>`;
-      })
-      .join(``);
+function createMurkup(countries) {
+  if ((countries.length >= 2) & (countries.length <= 10)) {
+    createCountriesListMurkup(countries);
   } else if (countries.length === 1) {
-    markup = countries.map(country => {
-      return `<li>
-    <img src="${country.flags.svg}" width = 30 alt="" />
-    <span>${country.name.official}</span>
-  </li>
-  <div>Capital: ${country.capital}</div>
-  <div>Population: ${country.population}</div>
-  <div>Languages: ${Object.values(country.languages).join(`, `)}</div>`;
-    });
+    createCountryMurkup(countries);
   } else if (countries.length > 10) {
     Notiflix.Notify.info(
       'Too many matches found. Please enter a more specific name.'
@@ -55,4 +41,27 @@ function createCountriesMurkup(countries) {
     Notiflix.Notify.failure(`"Oops, there is no country with that name"`);
   }
   refs.countryList.innerHTML = markup;
+}
+
+function createCountriesListMurkup(countries) {
+  markup = countries
+    .map(country => {
+      return `<li>
+    <img src="${country.flags.svg}" width = 30 alt="" />
+    <span>${country.name.official}</span>
+  </li>`;
+    })
+    .join(``);
+}
+
+function createCountryMurkup(countries) {
+  markup = countries.map(country => {
+    return `<li>
+    <img src="${country.flags.svg}" width = 30 alt="" />
+    <span>${country.name.official}</span>
+  </li>
+  <div>Capital: ${country.capital}</div>
+  <div>Population: ${country.population}</div>
+  <div>Languages: ${Object.values(country.languages).join(`, `)}</div>`;
+  });
 }
