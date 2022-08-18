@@ -25,9 +25,10 @@ function onSearchInput() {
   }
   fetchCountries(refs.searchBox.value.trim())
     .then(createMurkup)
-    .catch(error =>
-      Notiflix.Notify.failure(`Oops, there is no country with that name`)
-    );
+    .catch(error => {
+      console.log(error);
+      Notiflix.Notify.failure(`Oops, there is no country with that name`);
+    });
 }
 
 function createMurkup(countries) {
@@ -39,8 +40,6 @@ function createMurkup(countries) {
     Notiflix.Notify.info(
       'Too many matches found. Please enter a more specific name.'
     );
-  } else {
-    Notiflix.Notify.failure(`Oops, there is no country with that name`);
   }
   refs.countryList.innerHTML = markup;
 }
